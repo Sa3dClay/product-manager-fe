@@ -1,8 +1,19 @@
 import Link from "next/link";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { userDataActions } from "@/store/user.slice";
 
 const Navbar = () => {
+    const dispatch = useDispatch();
     const [isOpen, setIsOpen] = useState(false);
+
+    const logout = () => {
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+
+        dispatch(userDataActions.setUser(null));
+        dispatch(userDataActions.setToken(null));
+    };
 
     return (
         <nav className="bg-gray-900">
@@ -61,10 +72,17 @@ const Navbar = () => {
                         <div className="flex items-center">
                             <Link
                                 href="/products"
-                                className="px-3 py-2 mx-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out"
+                                className="px-3 py-2 mx-1 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out"
                             >
                                 Products
                             </Link>
+
+                            <a
+                                className="px-3 py-2 mx-1 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out cursor-pointer"
+                                onClick={logout}
+                            >
+                                Logout
+                            </a>
                         </div>
                     </div>
                 </div>
