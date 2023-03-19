@@ -12,10 +12,17 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [errors, setErrors] = useState([]);
     const [password, setPassword] = useState("");
+    const [initial, setInitial] = useState(true);
 
     useEffect(() => {
+        if (!initial) return;
+
+        axios.defaults.baseURL = "http://127.0.0.1:8000";
+
         if (userData.token || localStorage.token) router.push("/");
-    }, [userData, router]);
+
+        setInitial(false);
+    }, [initial, userData, router]);
 
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
@@ -62,8 +69,8 @@ const Login = () => {
     };
 
     return (
-        <div className="flex h-screen w-screen items-center bg-gray-900">
-            <div className="mx-auto my-auto">
+        <div className="flex h-screen w-screen items-center">
+            <div className="mx-auto my-auto rounded-md overflow-hidden shadow-xl p-8">
                 <form onSubmit={handleSubmit}>
                     <div className="my-4">
                         <input

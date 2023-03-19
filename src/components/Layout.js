@@ -1,8 +1,8 @@
 import axios from "axios";
 import Head from "next/head";
+import Navbar from "./Navbar";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-const { default: Navbar } = require("./Navbar");
 import { userDataActions } from "@/store/user.slice";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -12,8 +12,6 @@ const Layout = ({ children }) => {
     const userData = useSelector((state) => state.userData);
 
     useEffect(() => {
-        axios.defaults.baseURL = "http://127.0.0.1:8000";
-
         if (userData.token) return;
 
         let user = localStorage.user,
@@ -25,7 +23,10 @@ const Layout = ({ children }) => {
             dispatch(userDataActions.setUser(JSON.parse(user)));
             dispatch(userDataActions.setToken(JSON.parse(token)));
 
-            axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+            axios.defaults.baseURL = "http://127.0.0.1:8000";
+            axios.defaults.headers.common[
+                "Authorization"
+            ] = `Bearer ${JSON.parse(token)}`;
         }
     }, [userData, router, dispatch]);
 
