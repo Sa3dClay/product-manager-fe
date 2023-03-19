@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 const Product = () => {
     const router = useRouter();
     const { pid } = router.query;
+    const fakeImg = "https://placehold.co/160";
 
     const [product, setProduct] = useState({});
     const [isLoading, setIsLoading] = useState(true);
@@ -26,20 +27,30 @@ const Product = () => {
     }, [pid]);
 
     const ImagesView =
-        !isLoading &&
-        product.images.length &&
-        product.images.map((image) => (
+        !isLoading && product.images.length ? (
+            product.images.map((image) => (
+                <Image
+                    key={image.id}
+                    priority
+                    unoptimized
+                    loader={() => image.image_path}
+                    src={image.image_path}
+                    alt={product.name}
+                    height={160}
+                    width={160}
+                />
+            ))
+        ) : (
             <Image
-                key={image.id}
                 priority
                 unoptimized
-                loader={() => image.image_path}
-                src={image.image_path}
+                loader={() => fakeImg}
+                src={fakeImg}
                 alt={product.name}
                 height={160}
                 width={160}
             />
-        ));
+        );
 
     const productView = (
         <div className="flex flex-col items-center">

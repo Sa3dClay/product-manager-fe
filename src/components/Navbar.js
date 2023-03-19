@@ -71,12 +71,17 @@ const Navbar = () => {
                     >
                         <div className="flex items-center">
                             <Link
+                                href="/products/create"
+                                className="px-3 py-2 mx-1 rounded-md text-sm font-medium text-gray-500 hover:text-white hover:bg-gray-800 focus:outline-none transition duration-150 ease-in-out"
+                            >
+                                Create
+                            </Link>
+                            <Link
                                 href="/products"
                                 className="px-3 py-2 mx-1 rounded-md text-sm font-medium text-gray-500 hover:text-white hover:bg-gray-800 focus:outline-none transition duration-150 ease-in-out"
                             >
                                 Products
                             </Link>
-
                             <a
                                 className="px-3 py-2 mx-1 rounded-md text-sm font-medium text-red-500 hover:text-red-500 hover:bg-gray-800 focus:outline-none transition duration-150 ease-in-out cursor-pointer"
                                 onClick={logout}

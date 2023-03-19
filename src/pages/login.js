@@ -69,8 +69,8 @@ const Login = () => {
     };
 
     return (
-        <div className="flex h-screen w-screen items-center">
-            <div className="mx-auto my-auto rounded-md overflow-hidden shadow-xl p-8">
+        <div className="flex h-screen w-screen items-center bg-gray-100">
+            <div className="mx-auto my-auto rounded-md overflow-hidden bg-white shadow-xl p-8">
                 <form onSubmit={handleSubmit}>
                     <div className="my-4">
                         <input
@@ -108,7 +108,7 @@ const Login = () => {
                     </div>
                     <button
                         type="submit"
-                        className="w-full my-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        className="w-full my-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded"
                     >
                         Login
                     </button>
