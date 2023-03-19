@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import Loader from "@/components/Loader";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -68,7 +69,7 @@ const Product = () => {
         </div>
     );
 
-    return <Layout>{!isLoading && productView}</Layout>;
+    return <Layout>{isLoading ? <Loader /> : productView}</Layout>;
 };
 
 export default Product;

@@ -1,19 +1,23 @@
 import axios from "axios";
 import Layout from "@/components/Layout";
+import Loader from "@/components/Loader";
 import { useEffect, useState } from "react";
 import ProductCard from "@/components/ProductCard";
 
 const Products = () => {
     const [products, setProducts] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         axios
             .get("/api/products")
             .then((res) => {
                 setProducts(res.data.products);
+                setIsLoading(false);
             })
             .catch((err) => {
                 console.log(err.response);
+                setIsLoading(false);
             });
     }, []);
 
@@ -29,16 +33,16 @@ const Products = () => {
         </>
     );
 
+    const pageView = products.length ? (
+        productsView
+    ) : (
+        <h2 className="text-2xl font-bold text-center">No Products Founded</h2>
+    );
+
     return (
         <Layout>
             <div className="container mx-auto">
-                {products.length ? (
-                    productsView
-                ) : (
-                    <h2 className="text-2xl font-bold text-center">
-                        No Products Founded
-                    </h2>
-                )}
+                {isLoading ? <Loader /> : pageView}
             </div>
         </Layout>
     );
