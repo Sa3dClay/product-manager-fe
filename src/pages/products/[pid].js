@@ -1,6 +1,8 @@
 import Layout from "@/components/Layout";
 import Loader from "@/components/Loader";
+import ProductImage from "@/components/ProductImage";
 import axios from "axios";
+import Swal from "sweetalert2";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -12,6 +14,7 @@ const Product = () => {
 
     const [product, setProduct] = useState({});
     const [isLoading, setIsLoading] = useState(true);
+    const [hoveredImageIndex, setHoveredImageIndex] = useState(-1);
 
     useEffect(() => {
         if (!pid) return;
@@ -20,6 +23,7 @@ const Product = () => {
             .get("/api/products/" + pid)
             .then((res) => {
                 setProduct(res.data.product);
+
                 setIsLoading(false);
             })
             .catch((err) => {
@@ -27,18 +31,48 @@ const Product = () => {
             });
     }, [pid]);
 
+    const handleDeleteProductImage = (imageId, index) => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You will not be able to recover this image!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "No, cancel!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios
+                    .delete("/api/products/images/" + imageId)
+                    .then((res) => {
+                        Swal.fire({
+                            title: "Image deleted successfully!",
+                            showConfirmButton: false,
+                            icon: "success",
+                            timer: 2000,
+                        });
+
+                        product.images.splice(index, 1);
+                    })
+                    .catch((err) => {
+                        console.log(err.response);
+                    });
+            }
+        });
+    };
+
     const ImagesView =
         !isLoading && product.images.length ? (
-            product.images.map((image) => (
-                <Image
+            product.images.map((image, index) => (
+                <ProductImage
                     key={image.id}
-                    priority
-                    unoptimized
-                    loader={() => image.image_path}
-                    src={image.image_path}
-                    alt={product.name}
-                    height={160}
-                    width={160}
+                    imgSrc={image.image_path}
+                    productName={product.name}
+                    isHovering={index === hoveredImageIndex}
+                    onMouseLeave={() => setHoveredImageIndex(-1)}
+                    onMouseEnter={() => setHoveredImageIndex(index)}
+                    onDeleteProductImage={() =>
+                        handleDeleteProductImage(image.id, index)
+                    }
                 />
             ))
         ) : (
