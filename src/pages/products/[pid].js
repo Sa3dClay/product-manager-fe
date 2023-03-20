@@ -6,6 +6,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { ArrowUpTrayIcon } from "@heroicons/react/24/outline";
 
@@ -13,8 +14,10 @@ const Product = () => {
     const router = useRouter();
     const { pid } = router.query;
     const fakeImg = "https://placehold.co/160";
+    const productsData = useSelector((state) => state.productsData);
 
     const [product, setProduct] = useState({});
+    const [initial, setInitial] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
     const [hoveredImageIndex, setHoveredImageIndex] = useState(-1);
     const [isAddImagesModalOpen, setIsAddImagesModalOpen] = useState(false);
@@ -22,17 +25,29 @@ const Product = () => {
     useEffect(() => {
         if (!pid) return;
 
-        axios
-            .get("/api/products/" + pid)
-            .then((res) => {
-                setProduct(res.data.product);
-
-                setIsLoading(false);
-            })
-            .catch((err) => {
-                console.log(err.response);
+        if (initial) {
+            fetchData();
+            setInitial(false);
+        } else {
+            let updatedProduct = productsData.products.find((product) => {
+                return product.id == pid;
             });
-    }, [pid]);
+
+            if (updatedProduct) setProduct(updatedProduct);
+        }
+
+        function fetchData() {
+            axios
+                .get("/api/products/" + pid)
+                .then((res) => {
+                    setProduct(res.data.product);
+                    setIsLoading(false);
+                })
+                .catch((err) => {
+                    console.log(err.response);
+                });
+        }
+    }, [pid, initial, productsData]);
 
     const handleAddImagesClick = () => {
         setIsAddImagesModalOpen(true);

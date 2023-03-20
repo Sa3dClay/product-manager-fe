@@ -14,8 +14,6 @@ const NewProductForm = () => {
         axios
             .post("/api/products/create", formData)
             .then((res) => {
-                console.log(res);
-
                 form.reset();
 
                 router.push("/products");

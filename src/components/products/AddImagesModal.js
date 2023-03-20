@@ -1,9 +1,10 @@
 import axios from "axios";
 import Modal from "../Modal";
-import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
+import { updateProduct } from "@/store/products.slice";
 
 const AddImagesModal = ({ isOpen, onClose, productId }) => {
-    const router = useRouter();
+    const dispatch = useDispatch();
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -15,7 +16,12 @@ const AddImagesModal = ({ isOpen, onClose, productId }) => {
         axios
             .post("/api/products/images/add", formData)
             .then((res) => {
-                // TODO: sync products slice with product update
+                dispatch(
+                    updateProduct({
+                        id: productId,
+                        updatedProduct: res.data.product,
+                    })
+                );
             })
             .catch((err) => {
                 console.log(err.response);
