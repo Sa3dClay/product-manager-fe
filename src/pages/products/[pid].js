@@ -2,13 +2,14 @@ import Layout from "@/components/Layout";
 import Loader from "@/components/Loader";
 import ProductImage from "@/components/products/ProductImage";
 import AddImagesModal from "@/components/products/AddImagesModal";
+import EditProductModal from "@/components/products/EditProductModal";
 import axios from "axios";
 import Swal from "sweetalert2";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { ArrowUpTrayIcon } from "@heroicons/react/24/outline";
+import { ArrowUpTrayIcon, PencilIcon } from "@heroicons/react/24/outline";
 
 const Product = () => {
     const router = useRouter();
@@ -21,6 +22,7 @@ const Product = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [hoveredImageIndex, setHoveredImageIndex] = useState(-1);
     const [isAddImagesModalOpen, setIsAddImagesModalOpen] = useState(false);
+    const [isEditProductModalOpen, setIsEditProductModalOpen] = useState(false);
 
     useEffect(() => {
         if (!pid) return;
@@ -55,6 +57,14 @@ const Product = () => {
 
     const handleAddImagesModalClose = () => {
         setIsAddImagesModalOpen(false);
+    };
+
+    const handleEditProductSubmit = () => {
+        setIsEditProductModalOpen(true);
+    };
+
+    const handleEditProductModalClose = () => {
+        setIsEditProductModalOpen(false);
     };
 
     const handleDeleteProductImage = (imageId, index) => {
@@ -130,12 +140,27 @@ const Product = () => {
         </>
     );
 
+    const EditProductView = (
+        <>
+            <button
+                onClick={handleEditProductSubmit}
+                className="absolute top-20 left-10 m-2 bg-gray-800 text-white p-2 rounded-full hover:bg-gray-700"
+            >
+                <PencilIcon className="h-6 w-6" />
+            </button>
+
+            <EditProductModal
+                productId={product.id}
+                productName={product.name}
+                productPrice={product.price}
+                isOpen={isEditProductModalOpen}
+                onClose={handleEditProductModalClose}
+            />
+        </>
+    );
+
     const productView = (
         <div className="flex flex-col items-center">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {ImagesView}
-            </div>
-
             <div className="mt-4 font-bold text-xl uppercase text-gray-600">
                 {product.name}
             </div>
@@ -144,7 +169,13 @@ const Product = () => {
                 ${product.price}
             </div>
 
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {ImagesView}
+            </div>
+
             {AddImagesView}
+
+            {EditProductView}
         </div>
     );
 
